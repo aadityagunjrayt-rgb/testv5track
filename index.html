@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screenshot Tracker v5 </title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    h2 { color: #333; }
+    textarea { width: 100%; height: 120px; padding: 10px; font-size: 14px; margin-bottom: 10px; }
+    button { padding: 10px 15px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    #notSentList { margin-top: 15px; background: #fff3cd; padding: 10px; border-left: 5px solid #ffc107; }
+    table { margin-top: 15px; border-collapse: collapse; width: 300px; }
+    td, th { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #007bff; color: white; }
+    .sent { color: green; font-weight: bold; }
+    .notSent { color: red; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2>Screenshot Tracker v5</h2>
+
+<label>Paste emails that sent screenshot (comma, space, or newline separated):</label>
+<textarea id="inputEmails"></textarea>
+
+<button onclick="checkEmails()">Check</button>
+<button id="copyBtn">📋</button>
+
+<div id="notSentList"></div>
+
+<table id="summaryTable">
+    <tr>
+        <th>Total Emails</th>
+        <td id="totalEmails"></td>
+    </tr>
+    <tr>
+        <th>Sent</th>
+        <td id="sentCount" class="sent"></td>
+    </tr>
+    <tr>
+        <th>Not Sent</th>
+        <td id="notSentCount" class="notSent"></td>
+    </tr>
+</table>
+
+<script>
+const masterList = [
+    "taniya1097627@gmail.com",
+    "anjuhzb6789@gmail.com",
+    "sy0594322@gmail.com",
+    "shivababu2202@gmail.com",
+    "kartikhzb17@gmail.com",
+    "kumarabhishek96151@gmail.com",
+    "ritikkumar915574@gmail.com",
+    "surajdevkumar954@gmail.com",
+    "yadavrahul82816@gmail.com",
+    "yadavravindra7858@gmail.com",
+    "rohitkumaryadav914270@gmail.com",
+    "sujeetkuamr99056@gmail.com",
+    "rajk1416572@gmail.com",
+    "rockyykumar33@gmail.com",
+    "ajit665900@gmail.com",
+    "akashkr91828@gmail.com",
+    "adityakhaire96@gmail.com"
+];
+
+let notSent = [];
+
+function checkEmails() {
+    const input = document.getElementById("inputEmails").value;
+    // Split input by comma, space, or newline
+    const inputEmails = input.split(/[\s,]+/).map(e => e.trim().toLowerCase()).filter(e => e);
+    const uniqueInput = [...new Set(inputEmails)]; // remove duplicates
+
+    const masterLower = masterList.map(e => e.toLowerCase());
+
+    notSent = masterLower.filter(email => !uniqueInput.includes(email));
+
+    // Show numbered list of not sent emails
+    let listHTML = "<strong>Not Sent Emails:</strong><br>";
+    notSent.forEach((email, index) => {
+        listHTML += `${index + 1}. ${email}<br>`;
+    });
+    document.getElementById("notSentList").innerHTML = listHTML;
+
+    // Update table counts
+    document.getElementById("totalEmails").innerText = masterList.length;
+    document.getElementById("sentCount").innerText = masterList.length - notSent.length;
+    document.getElementById("notSentCount").innerText = notSent.length;
+}
+
+// Copy only not sent emails to clipboard
+document.getElementById("copyBtn").addEventListener("click", () => {
+    if(notSent.length === 0){
+        alert("No emails to copy!");
+        return;
+    }
+    navigator.clipboard.writeText(notSent.join("\n"))
+        .then(() => alert("Not sent emails copied!"))
+        .catch(err => console.error("Copy failed:", err));
+});
+</script>
+
+</body>
+</html>
